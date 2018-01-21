@@ -5,20 +5,25 @@ import (
   "html"
 	"log"
 	"net/http" // Package http provides HTTP client and server implementations
+  "github.com/gorilla/mux"
 )
 
 func main() {
-  http.HandleFunc("/foo", fooHandler)
+  router := mux.NewRouter()
+	router.HandleFunc("/", fooHandler)
+  router.HandleFunc("/articles/{id}", ArticlesCategoryHandler)
 
-  http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
-  	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-  })
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func fooHandler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "Hello, foo")
+  fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+}
+
+func ArticlesCategoryHandler(w http.ResponseWriter, r *http.Request) {
+  vars := mux.Vars(r)
+  w.WriteHeader(http.StatusOK)
+  fmt.Fprintf(w, "Article id: %v\n", vars["id"])
 }
 
 // s := &http.Server{
