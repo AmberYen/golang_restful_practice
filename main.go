@@ -11,7 +11,8 @@ import (
 func main() {
   router := mux.NewRouter()
 	router.HandleFunc("/", fooHandler)
-  router.HandleFunc("/articles/{id}", ArticlesCategoryHandler)
+  router.HandleFunc("/articles", ArticlesListHandler)
+  router.HandleFunc("/articles/{id}", ArticleHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
@@ -20,7 +21,11 @@ func fooHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 }
 
-func ArticlesCategoryHandler(w http.ResponseWriter, r *http.Request) {
+func ArticlesListHandler(w http.ResponseWriter, r *http.Request) {
+  fmt.Fprintf(w, "Article List")
+}
+
+func ArticleHandler(w http.ResponseWriter, r *http.Request) {
   vars := mux.Vars(r)
   w.WriteHeader(http.StatusOK)
   fmt.Fprintf(w, "Article id: %v\n", vars["id"])
