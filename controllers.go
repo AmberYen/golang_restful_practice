@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"html"
+	//"log"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -37,11 +38,8 @@ func ArticlesListHandler(w http.ResponseWriter, r *http.Request) {
 
 func ArticleHandler(w http.ResponseWriter, r *http.Request) {
   vars := mux.Vars(r)
-  w.WriteHeader(http.StatusOK)
-  fmt.Fprintf(w, "Article id: %v\n", vars["id"])
-
 	// read
-	var article Article
+	article := Article{}
 	DB.First(&article, vars["id"])
 
 	json.NewEncoder(w).Encode(article)
