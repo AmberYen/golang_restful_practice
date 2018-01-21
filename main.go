@@ -6,6 +6,14 @@ import (
 )
 
 func main() {
+	// db
+	db := ConnectDB()
+	SetDatabase(db)
+
+	// init mocks
+  // db.Create(&Article{Title: "Hello", Description: "HI", Status: true})
+
+	// router
   router := NewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))

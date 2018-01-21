@@ -7,7 +7,14 @@ import (
 	"html"
 
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 )
+
+var DB *gorm.DB
+
+func SetDatabase(db *gorm.DB) {
+    DB = db
+}
 
 func fooHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
@@ -32,4 +39,10 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
   vars := mux.Vars(r)
   w.WriteHeader(http.StatusOK)
   fmt.Fprintf(w, "Article id: %v\n", vars["id"])
+
+	// read
+	var article Article
+	DB.First(&article, vars["id"])
+
+	json.NewEncoder(w).Encode(article)
 }
